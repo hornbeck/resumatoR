@@ -21,10 +21,9 @@ getJobs <- function() {
   }
   
   ## transform the JSON to a data.frame, taken from zendeskR
-  json.data <- lapply(unlist(result), fromJSON)
-  pre.result <- lapply(json.data, function(x) do.call("rbind", x))
-  final.result <- do.call("rbind", pre.result)
-  jobs.df <- data.frame(final.result)
+  jobs.df <- jsonToDataFrame(result)
   
   return(jobs.df)
 }
+
+

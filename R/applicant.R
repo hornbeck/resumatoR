@@ -1,5 +1,9 @@
 getApplicant <- function(applicant_id) {
+  applicant.json <- getURL(paste(.ResumatorEnv$data$url, .ResumatorEnv$data$applicants, "/", applicant_id, "?apikey=", .ResumatorEnv$data$apikey, sep=""), curl=getCurlHandle())
+  applicant <- fromJSON(applicant.json)
   
+  ## returns a applicant as a list    
+  return(applicant)
 }
 
 getApplicants <- function() {
@@ -18,16 +22,12 @@ getApplicants <- function() {
   }
   
   ## transform the JSON to a data.frame, taken from zendeskR
-  json.data <- lapply(unlist(result), fromJSON)
-  pre.result <- lapply(json.data, function(x) do.call("rbind", x))
-  final.result <- do.call("rbind", pre.result)
-  applicants.df <- data.frame(final.result)
+  applicants.df <- jsonToDataFrame(result)
   
   ## transform dates from integers into characters
-  new_dates <- lapply(applicants.df$apply_date, function(x) as.character(x))
-  applicants.df$apply_date <- new_dates
-  applicants.df$apply_date <- unlist(applicants.df$apply_date)
+  applicants.df$apply_date <- toChar(applicants.df$apply_date)
 
   
   return(applicants.df)
 }
+

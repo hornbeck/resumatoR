@@ -1,6 +1,6 @@
 getTask <- function(task_id) {
   task.json <- getURL(paste(.ResumatorEnv$data$url, .ResumatorEnv$data$tasks, "/", task_id, "?apikey=", .ResumatorEnv$data$apikey, sep=""), curl=getCurlHandle())
-  contact <- fromJSON(task.json)
+  task <- fromJSON(task.json)
   
   ## returns a applicant as a list    
   return(task)

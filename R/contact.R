@@ -1,5 +1,5 @@
 getContact <- function(contact_id) {
-  contact.json <- getURL(paste(.ResumatorEnv$data$url, .ResumatorEnv$data$contacts, "/", applicant_id, "?apikey=", .ResumatorEnv$data$apikey, sep=""), curl=getCurlHandle())
+  contact.json <- getURL(paste(.ResumatorEnv$data$url, .ResumatorEnv$data$contacts, "/", contact_id, "?apikey=", .ResumatorEnv$data$apikey, sep=""), curl=getCurlHandle())
   contact <- fromJSON(contact.json)
   
   ## returns a applicant as a list    

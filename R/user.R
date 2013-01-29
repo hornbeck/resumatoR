@@ -7,22 +7,34 @@ getUser <- function(user_id) {
 }
 
 getUsers <- function(name = NULL, email = NULL, type = NULL, team_id = NULL) {
+ 
+  results <- getResults()    
+  
+  ## transform the JSON to a data.frame, taken from zendeskR
+  users.df <- jsonToDataFrame(results)
+  
+  return(users.df)
+}
+
+getResults <- function() {
   result <- list()
   stopPaging <- FALSE
   i <- 1
   
-  ## paging isn't working since resumator doesn't return next_page, so it's always NULL
-  ## Need to page through the results since only 100 are returned at a time, taken from zendeskR
+  # make the call to resumator and return the results
   while(stopPaging==FALSE){
-    result[[i]]<-getURL(paste(.ResumatorEnv$data$url, .ResumatorEnv$data$users, "/page/", i, "?apikey=", .ResumatorEnv$data$apikey, sep=""), curl=getCurlHandle())
-    if(is.null(fromJSON(result[[i]])$next_page)){
+    # the tryCatch block is used to page through until there are no longer any results      
+    result[[i]]<- tryCatch({
+      getURL(paste(.ResumatorEnv$data$url, .ResumatorEnv$data$jobs, "/page/", i, "?apikey=", 
+                   .ResumatorEnv$data$apikey, sep=""), curl=getCurlHandle())
+    }, error = function(err) {
+      return(NULL)
+    })
+    # the last result that is returned and breaks the while loop is an empty set of brackets
+    if(result[[i]]=="[]"){
       stopPaging = TRUE
     }
     i <- i + 1
   }
-  
-  ## transform the JSON to a data.frame, taken from zendeskR
-  users.df <- jsonToDataFrame(result)
-  
-  return(users.df)
+  return(result)
 }

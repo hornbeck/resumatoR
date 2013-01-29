@@ -29,3 +29,4 @@ toChar <- function(column) {
   listChar <- lapply(column, function(x) as.character(x))
   return(unlist(listChar))
 }
+

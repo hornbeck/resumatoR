@@ -30,3 +30,25 @@ toChar <- function(column) {
   return(unlist(listChar))
 }
 
+getResults <- function(model) {
+  result <- list()
+  stopPaging <- FALSE
+  i <- 1
+  
+  # make the call to resumator and return the results
+  while(stopPaging==FALSE){
+    # the tryCatch block is used to page through until there are no longer any results      
+    result[[i]]<- tryCatch({
+      getURL(paste(.ResumatorEnv$data$url, "/", model, "/page/", i, "?apikey=", 
+                   .ResumatorEnv$data$apikey, sep=""), curl=getCurlHandle())
+    }, error = function(err) {
+      return(NULL)
+    })
+    # the last result that is returned and breaks the while loop is an empty set of brackets
+    if(result[[i]]=="[]"){
+      stopPaging = TRUE
+    }
+    i <- i + 1
+  }
+  return(result)
+}

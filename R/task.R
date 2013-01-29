@@ -6,7 +6,7 @@ getTask <- function(task_id) {
   return(task)
 }
 
-getTasks <- function() {
+getTasks <- function(from_date = NULL, to_date = NULL, status = NULL) {
   result <- list()
   stopPaging <- FALSE
   i <- 1

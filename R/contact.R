@@ -6,7 +6,7 @@ getContact <- function(contact_id) {
   return(contact)
 }
 
-getContacts <- function() {
+getContacts <- function(from_date = NULL, to_date = NULL) {
   result <- list()
   stopPaging <- FALSE
   i <- 1

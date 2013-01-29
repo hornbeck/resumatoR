@@ -6,7 +6,7 @@ getJob <- function(job_id) {
   return(job)
 }
 
-getJobs <- function() {
+getJobs <- function(title = NULL, recruiter = NULL, board_code = NULL, department = NULL, hiring_lead = NULL, team_id = NULL, state = NULL, city = NULL) {
   result <- list()
   stopPaging <- FALSE
   i <- 1

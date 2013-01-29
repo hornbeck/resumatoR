@@ -6,7 +6,7 @@ getUser <- function(user_id) {
   return(user)
 }
 
-getUsers <- function() {
+getUsers <- function(name = NULL, email = NULL, type = NULL, team_id = NULL) {
   result <- list()
   stopPaging <- FALSE
   i <- 1

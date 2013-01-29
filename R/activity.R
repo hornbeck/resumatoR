@@ -6,7 +6,7 @@ getActivity <- function(activity_id) {
   return(activity)  
 }
 
-getActivities <- function() {
+getActivities <- function(user_id = NULL, team_id = NULL, object_id = NULL, category = NULL, date = NULL, from_date = NULL, to_date = NULL) {
   result <- list()
   stopPaging <- FALSE
   i <- 1

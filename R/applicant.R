@@ -1,33 +1,47 @@
 getApplicant <- function(applicant_id) {
-  applicant.json <- getURL(paste(.ResumatorEnv$data$url, .ResumatorEnv$data$applicants, "/", applicant_id, "?apikey=", .ResumatorEnv$data$apikey, sep=""), curl=getCurlHandle())
+  applicant.json <- getURL(paste(.ResumatorEnv$data$url, .ResumatorEnv$data$applicants, "/", applicant_id, "?apikey=", 
+                                 .ResumatorEnv$data$apikey, sep=""), curl=getCurlHandle())
   applicant <- fromJSON(applicant.json)
   
   ## returns a applicant as a list    
   return(applicant)
 }
 
-getApplicants <- function() {
-  result <- list()
-  stopPaging <- FALSE
-  i <- 1
+getApplicants <- function(name = NULL, city = NULL, job_id = NULL, job_title = NULL, recruiter_id = NULL, apply_date = NULL, from_apply_date = NULL, to_apply_date = NULL) {
   
-  ## paging isn't working since resumator doesn't return next_page, so it's always NULL
-  ## Need to page through the results since only 100 are returned at a time, taken from zendeskR
-  while(stopPaging==FALSE){
-    result[[i]]<-getURL(paste(.ResumatorEnv$data$url, .ResumatorEnv$data$applicants, "/page/", i, "?apikey=", .ResumatorEnv$data$apikey, sep=""), curl=getCurlHandle())
-    if(is.null(fromJSON(result[[i]])$next_page)){
-      stopPaging = TRUE
-    }
-    i <- i + 1
+  results <- getResults()
+  
+  ## transform the JSON to a data.frame
+  json.data <- lapply(unlist(results), fromJSON)
+  pre.result <- lapply(json.data, function(x) do.call("rbind", x))
+  pre.result[[length(pre.result)]] <- NULL
+  applicants.df <- rbind(pre.result[[1]])
+  for (y in 2:length(pre.result)) {
+    applicants.df <- rbind(applicants.df, pre.result[[y]])
   }
-  
-  ## transform the JSON to a data.frame, taken from zendeskR
-  applicants.df <- jsonToDataFrame(result)
-  
-  ## transform dates from integers into characters
-  applicants.df$apply_date <- toChar(applicants.df$apply_date)
-
   
   return(applicants.df)
 }
 
+getResults <- function() {
+  result <- list()
+  stopPaging <- FALSE
+  i <- 1
+  
+  # make the call to resumator and return the results
+  while(stopPaging==FALSE){
+    # the tryCatch block is used to page through until there are no longer any results      
+    result[[i]]<- tryCatch({
+      getURL(paste(.ResumatorEnv$data$url, .ResumatorEnv$data$applicants, "/page/", i, "?apikey=", 
+                   .ResumatorEnv$data$apikey, sep=""), curl=getCurlHandle())
+    }, error = function(err) {
+      return(NULL)
+    })
+    # the last result that is returned and breaks the while loop is an empty set of brackets
+    if(result[[i]]=="[]"){
+      stopPaging = TRUE
+    }
+    i <- i + 1
+  }
+  return(result)
+}

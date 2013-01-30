@@ -1,0 +1,11 @@
+Package: resumatoR
+Type: Package
+Title: Resumator API Wrapper
+Version: 0.1
+Date: 2013-01-30
+Author: John Hornbeck
+Depends: RCurl, rjson
+Maintainer: John Hornbeck <hornbeck@gmail.com>
+Description: This package provides an R wrapper for the Resumator API
+Github URL: http://www.github.com/hornbeck/resumatoR
+License: Apache   

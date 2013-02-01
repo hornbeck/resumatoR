@@ -12,7 +12,10 @@ getApplicants <- function(name = NULL, city = NULL, job_id = NULL, job_title = N
   results <- getResults("applicants")
   
   ## transform the JSON to a data.frame
-  applicants.df <- jsonToDataFrame(results)
+  json.data <- lapply(unlist(results), function(x) fromJSON(x, nullValue=NA))
+  pre.result <- lapply(json.data, function(x) do.call("rbind", x))
+  final.result <- do.call("rbind", pre.result)
+  applicants.df <- as.data.frame(final.result)
   
   return(applicants.df)
 }

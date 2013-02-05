@@ -4,8 +4,19 @@ Title: Resumator API Wrapper
 Version: 0.1
 Date: 2013-01-30
 Author: John Hornbeck
-Depends: RCurl, RJSONIO
+Depends:
+    RCurl,
+    RJSONIO
 Maintainer: John Hornbeck <hornbeck@gmail.com>
 Description: This package provides an R wrapper for the Resumator API
 Github URL: http://www.github.com/hornbeck/resumatoR
-License: Apache   
+License: Apache
+Collate:
+    'activity.R'
+    'applicant.R'
+    'contact.R'
+    'job.R'
+    'resumator.R'
+    'task.R'
+    'user.R'
+    'zzz.R'
